@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>A Special Question ❤️</title>
+<style>
+  body{
+    margin:0;
+    font-family: Arial, sans-serif;
+    overflow-x:hidden;
+    scroll-behavior: smooth;
+    background: linear-gradient(#ffad60,#6b3c9a,#0a0a2a);
+    color:white;
+  }
+  section{
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    flex-direction:column;
+    position:relative;
+    padding:20px;
+  }
+  h1, h2{
+    margin:10px 0;
+  }
+  #yes, #no{
+    padding:15px 30px;
+    font-size:20px;
+    margin:10px;
+    border:none;
+    border-radius:12px;
+    cursor:pointer;
+    transition:0.3s;
+    position:relative;
+    z-index:10;
+  }
+  #yes{background:#ff4d6d; color:white;}
+  #no{background:#444; color:white;}
+  .firefly{
+    position:absolute;
+    width:6px;
+    height:6px;
+    background:yellow;
+    border-radius:50%;
+    box-shadow:0 0 10px yellow;
+  }
+  .emoji{
+    position:absolute;
+    font-size:30px;
+  }
+</style>
+</head>
+<body>
+
+<!-- Section 1: Opening -->
+<section id="section1">
+  <h1>I made something for you…</h1>
+  <h2 id="question">Will you be my girlfriend? ❤️</h2>
+  <button id="yes">YES</button>
+  <button id="no">NO</button>
+</section>
+
+<!-- Section 2: Poem -->
+<section id="section2">
+  <div id="poem" style="opacity:0; max-width:700px; font-size:28px; line-height:1.8em;"></div>
+</section>
+
+<!-- Section 3: Particle Heart -->
+<section id="section3">
+  <canvas id="three-canvas" style="display:block; width:100%; height:100%;"></canvas>
+</section>
+
+<!-- Section 4: Magic Effects -->
+<section id="section4">
+  <h2>✨ You just made me the happiest person ✨</h2>
+  <h2>— Prabhat ji ❤️</h2>
+</section>
+
+<audio id="music" loop>
+  <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_c8b7c1c2d6.mp3" type="audio/mp3">
+</audio>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js"></script>
+
+<script>
+// -------------------- NO BUTTON ESCAPE --------------------
+let noBtn = document.getElementById("no");
+let clicks=0;
+function moveNo(){
+  noBtn.style.left = Math.random()*80 + "vw";
+  noBtn.style.top = Math.random()*80 + "vh";
+}
+document.addEventListener("mousemove", e=>{
+  let rect=noBtn.getBoundingClientRect();
+  let dx=e.clientX-rect.left;
+  let dy=e.clientY-rect.top;
+  if(Math.abs(dx)<80 && Math.abs(dy)<50) moveNo();
+});
+noBtn.onclick=()=>{
+  clicks++;
+  moveNo();
+  if(clicks>=15){
+    noBtn.style.display="none";
+    document.getElementById("question").innerHTML="Be my girlfriend 😠";
+    let yes=document.getElementById("yes");
+    yes.style.fontSize="40px";
+    yes.style.padding="30px 60px";
+  }
+};
+
+// -------------------- YES CLICK --------------------
+document.getElementById("yes").onclick=()=>{
+  document.getElementById("music").play();
+  scrollToPoem();
+};
+
+// -------------------- POEM SCROLL --------------------
+function scrollToPoem(){
+  gsap.to(window, {duration:1.5, scrollTo:"#section2"});
+  showPoem();
+}
+
+function showPoem(){
+  let poemLines=[
+    "Out of billions of people in this world…",
+    "Somehow I found you.",
+    "And life became a little brighter.",
+    "You became someone very special to me.",
+    "I love you ❤️"
+  ];
+  let container = document.getElementById("poem");
+  container.innerHTML="";
+  container.style.opacity=1;
+  let delay=0;
+  poemLines.forEach(line=>{
+    let div = document.createElement("div");
+    div.style.opacity=0;
+    div.innerHTML=line;
+    container.appendChild(div);
+    setTimeout(()=>{div.style.transition="opacity 1s"; div.style.opacity=1;}, delay);
+    delay += 2500;
+  });
+  // After poem, scroll to heart
+  setTimeout(()=>{gsap.to(window,{duration:1.5,scrollTo:"#section3"}); startHeartAnimation();}, delay+1000);
+}
+
+// -------------------- THREE.JS PARTICLE HEART --------------------
+let scene = new THREE.Scene();
+let camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+let renderer = new THREE.WebGLRenderer({canvas:document.getElementById("three-canvas"), alpha:true});
+renderer.setSize(window.innerWidth, window.innerHeight);
+camera.position.z = 10;
+
+// Light
+let light = new THREE.PointLight(0xffffff,1);
+light.position.set(5,10,5);
+scene.add(light);
+
+// Stars
+let starGeo = new THREE.BufferGeometry();
+let starVertices = [];
+for(let i=0;i<2000;i++){
+  starVertices.push(
+    (Math.random()-0.5)*200,
+    (Math.random()-0.5)*200,
+    (Math.random()-0.5)*200
+  );
+}
+starGeo.setAttribute('position', new THREE.Float32BufferAttribute(starVertices,3));
+let starMat = new THREE.PointsMaterial({color:0xffffff,size:0.2});
+let stars = new THREE.Points(starGeo,starMat);
+scene.add(stars);
+
+// Particles
+let count = 1500;
+let geometry = new THREE.BufferGeometry();
+let positions = new Float32Array(count*3);
+for(let i=0;i<count*3;i++){
+  positions[i] = (Math.random()-0.5)*20;
+}
+geometry.setAttribute('position', new THREE.BufferAttribute(positions,3));
+let particleMat = new THREE.PointsMaterial({color:0xff6699, size:0.15});
+let particles = new THREE.Points(geometry,particleMat);
+scene.add(particles);
+
+// Heart function
+function heart(t){
+  let x = 16*Math.pow(Math.sin(t),3);
+  let y = 13*Math.cos(t) - 5*Math.cos(2*t) - 2*Math.cos(3*t) - Math.cos(4*t);
+  return [x/10, y/10];
+}
+
+function startHeartAnimation(){
+  let arr = geometry.attributes.position.array;
+  for(let i=0;i<count;i++){
+    let t = Math.random()*Math.PI*2;
+    let p = heart(t);
+    arr[i*3] = p[0]*2;
+    arr[i*3+1] = p[1]*2;
+    arr[i*3+2] = 0;
+  }
+  geometry.attributes.position.needsUpdate = true;
+  pulseHeart();
+  fireflies();
+  emojiRain();
+}
+
+// Pulse animation
+function pulseHeart(){
+  let scale = 1;
+  setInterval(()=>{
+    scale = scale===1 ? 1.05 : 1;
+    particles.scale.set(scale,scale,scale);
+  },500);
+}
+
+// -------------------- FIRELIES --------------------
+function fireflies(){
+  for(let i=0;i<25;i++){
+    let f = document.createElement("div");
+    f.className="firefly";
+    document.body.appendChild(f);
+    setInterval(()=>{
+      f.style.left = Math.random()*100 + "vw";
+      f.style.top = Math.random()*100 + "vh";
+    }, 2000);
+  }
+}
+
+// -------------------- EMOJI RAIN --------------------
+function emojiRain(){
+  let emojis=["❤️","💖","😘","💘","✨"];
+  setInterval(()=>{
+    let e=document.createElement("div");
+    e.className="emoji";
+    e.innerHTML = emojis[Math.floor(Math.random()*emojis.length)];
+    e.style.left = Math.random()*100 + "vw";
+    e.style.top = "-50px";
+    document.body.appendChild(e);
+    let fall = setInterval(()=>{
+      e.style.top = (e.offsetTop+4) + "px";
+    },20);
+    setTimeout(()=>{clearInterval(fall); e.remove();},4000);
+  },200);
+}
+
+// -------------------- RENDER --------------------
+function animate(){
+  requestAnimationFrame(animate);
+  stars.rotation.y += 0.0003;
+  particles.rotation.y += 0.002;
+  renderer.render(scene,camera);
+}
+animate();
+
+// Resize
+window.addEventListener("resize", ()=>{
+  camera.aspect = window.innerWidth/window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+</script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/ScrollToPlugin.min.js"></script>
+</body>
+</html>
