@@ -2,88 +2,100 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Will You Be My Girlfriend ❤️</title>
+<title>Ultimate Proposal ❤️</title>
 <style>
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  overflow-x: hidden;
-  scroll-behavior: smooth;
-  background: linear-gradient(to bottom, #ffad60, #6b3c9a, #0a0a2a);
-  color: white;
-  background-attachment: fixed;
-  height: 100%;
+body{
+  margin:0;
+  font-family:Arial, sans-serif;
+  overflow-x:hidden;
+  scroll-behavior:smooth;
+  background:linear-gradient(to bottom,#ffad60,#6b3c9a,#0a0a2a);
+  color:white;
+  background-attachment:fixed;
+  height:100%;
 }
-section {
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  flex-direction: column;
-  position: relative;
-  padding: 20px;
+section{
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  flex-direction:column;
+  position:relative;
+  padding:20px;
 }
-h1, h2 { margin: 10px 0; }
-#yes, #no {
-  padding: 15px 30px;
-  font-size: 20px;
-  margin: 10px;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: 0.3s;
-  position: absolute;
-  z-index: 10;
+h1,h2{margin:10px 0;}
+#yes{
+  background:#ff4d6d;
+  color:white;
+  padding:15px 30px;
+  font-size:20px;
+  border:none;
+  border-radius:12px;
+  cursor:pointer;
+  transition:0.3s;
+  margin-top:40px; /* Moves below the question */
 }
-#yes { background: #ff4d6d; color: white; }
-#no { background: #444; color: white; }
-.firefly {
-  position: absolute;
-  width: 6px;
-  height: 6px;
-  background: yellow;
-  border-radius: 50%;
-  box-shadow: 0 0 10px yellow;
+#no{
+  background:#444;
+  color:white;
+  padding:15px 30px;
+  font-size:20px;
+  border:none;
+  border-radius:12px;
+  cursor:pointer;
+  transition:0.3s;
+  position:absolute; /* roaming */
+  top:150px; /* start below question */
+  z-index:10;
 }
-.emoji {
-  position: absolute;
-  font-size: 30px;
+.firefly{
+  position:absolute;
+  width:6px;
+  height:6px;
+  background:yellow;
+  border-radius:50%;
+  box-shadow:0 0 10px yellow;
 }
-canvas {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
+.emoji{
+  position:absolute;
+  font-size:30px;
+  pointer-events:none;
+}
+canvas{
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  pointer-events:none;
 }
 </style>
 </head>
 <body>
 
 <section id="section1">
-  <h1>I made something for you…</h1>
-  <h2 id="question">Will you be my girlfriend? ❤️</h2>
-  <button id="yes">YES</button>
-  <button id="no">NO</button>
+<h1>I made something for you…</h1>
+<h2 id="question">Will you be my girlfriend? ❤️</h2>
+<button id="yes">YES</button>
+<button id="no">NO</button>
 </section>
 
 <section id="section2">
-  <div id="poem" style="opacity:0; max-width:700px; font-size:28px; line-height:1.8em;"></div>
+<div id="poem" style="opacity:0; max-width:700px; font-size:28px; line-height:1.8em;"></div>
 </section>
 
 <section id="section3">
-  <canvas id="three-canvas"></canvas>
+<canvas id="three-canvas"></canvas>
 </section>
 
 <section id="section4">
-  <h2>✨ You just made me the happiest person ✨</h2>
-  <h2>— Prabhat ji ❤️</h2>
+<h2>✨ You just made me the happiest person ✨</h2>
+<h2>— Prabhat ji ❤️</h2>
 </section>
 
 <audio id="music" loop>
-  <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_c8b7c1c2d6.mp3" type="audio/mp3">
+<source src="https://cdn.pixabay.com/audio/2022/03/15/audio_c8b7c1c2d6.mp3" type="audio/mp3">
 </audio>
 
 <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
@@ -91,188 +103,108 @@ canvas {
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/ScrollToPlugin.min.js"></script>
 
 <script>
-// -------------------- NO BUTTON ROAM --------------------
-let noBtn = document.getElementById("no");
-let clicks = 0;
-
-function moveNo() {
-  const btnWidth = noBtn.offsetWidth;
-  const btnHeight = noBtn.offsetHeight;
-  const maxLeft = window.innerWidth - btnWidth - 10;
-  const maxTop = window.innerHeight - btnHeight - 10;
-  noBtn.style.left = Math.random() * maxLeft + "px";
-  noBtn.style.top = Math.random() * maxTop + "px";
+// -------------------- NO BUTTON --------------------
+let noBtn = document.getElementById("no"), clicks=0;
+function moveNo(){
+  const w=noBtn.offsetWidth,h=noBtn.offsetHeight,maxL=window.innerWidth-w-10,maxT=window.innerHeight-h-10;
+  noBtn.style.left=Math.random()*maxL+"px";
+  noBtn.style.top=Math.random()*maxT+"px";
 }
-
-document.addEventListener("mousemove", e => {
-  const rect = noBtn.getBoundingClientRect();
-  const dx = e.clientX - (rect.left + rect.width/2);
-  const dy = e.clientY - (rect.top + rect.height/2);
-  if (Math.abs(dx)<100 && Math.abs(dy)<80) moveNo();
+document.addEventListener("mousemove",e=>{
+  const r=noBtn.getBoundingClientRect(),
+        dx=e.clientX-(r.left+r.width/2),
+        dy=e.clientY-(r.top+r.height/2);
+  if(Math.abs(dx)<100 && Math.abs(dy)<80) moveNo();
 });
-
-document.addEventListener("touchmove", e => {
-  const touch = e.touches[0];
-  const rect = noBtn.getBoundingClientRect();
-  const dx = touch.clientX - (rect.left + rect.width/2);
-  const dy = touch.clientY - (rect.top + rect.height/2);
-  if (Math.abs(dx)<100 && Math.abs(dy)<80) moveNo();
+document.addEventListener("touchmove",e=>{
+  const t=e.touches[0], r=noBtn.getBoundingClientRect(),
+        dx=t.clientX-(r.left+r.width/2),
+        dy=t.clientY-(r.top+r.height/2);
+  if(Math.abs(dx)<100 && Math.abs(dy)<80) moveNo();
 });
-
-noBtn.onclick = () => {
-  clicks++;
-  moveNo();
-  if (clicks >= 15) {
-    noBtn.style.display = "none";
-    document.getElementById("question").innerHTML = "Be my girlfriend 😠";
-    let yes = document.getElementById("yes");
-    yes.style.fontSize = "40px";
-    yes.style.padding = "30px 60px";
+noBtn.onclick=()=>{
+  clicks++; moveNo();
+  if(clicks>=15){
+    noBtn.style.display="none";
+    document.getElementById("question").innerHTML="Be my girlfriend 😠";
+    let y=document.getElementById("yes");
+    y.style.fontSize="40px";
+    y.style.padding="30px 60px";
   }
 };
 
-// -------------------- YES CLICK --------------------
-document.getElementById("yes").onclick = () => {
+// -------------------- YES BUTTON --------------------
+document.getElementById("yes").onclick=()=>{
   document.getElementById("music").play();
-  gsap.to(window,{duration:1.5, scrollTo:"#section2"});
+  gsap.to(window,{duration:1.5,scrollTo:"#section2"});
   showPoem();
 };
 
-// -------------------- POEM SCROLL --------------------
-function showPoem() {
-  const poemLines = [
-    "Out of billions of people in this world…",
-    "Somehow I found you.",
-    "And life became a little brighter.",
-    "You became someone very special to me.",
-    "I love you ❤️"
-  ];
-  const container = document.getElementById("poem");
-  container.innerHTML = "";
-  container.style.opacity = 1;
-  let delay = 0;
-
-  poemLines.forEach((line, i) => {
-    const div = document.createElement("div");
-    div.style.opacity = 0;
-    div.innerHTML = line;
-    container.appendChild(div);
-
-    setTimeout(()=>{
-      div.style.transition="opacity 1s"; 
-      div.style.opacity=1;
-
-      // Trigger shooting star for each line
-      shootingStar();
-
-    }, delay);
-
-    delay += 2500;
-  });
-
-  setTimeout(()=>{gsap.to(window,{duration:1.5,scrollTo:"#section3"}); startHeartAnimation();}, delay+1000);
+// -------------------- POEM --------------------
+function showPoem(){
+const lines=["Out of billions of people in this world…","Somehow I found you.","And life became a little brighter.","You became someone very special to me.","I love you ❤️"];
+const container=document.getElementById("poem");container.innerHTML="";container.style.opacity=1;
+let delay=0;
+lines.forEach((line,i)=>{
+  let div=document.createElement("div");
+  div.style.opacity=0; div.innerHTML=line; container.appendChild(div);
+  setTimeout(()=>{
+    div.style.transition="opacity 1s"; div.style.opacity=1;
+    shootingStar(); spawnParticlesAroundDiv(div);
+  },delay);
+  delay+=2500;
+});
+setTimeout(()=>{gsap.to(window,{duration:1.5,scrollTo:"#section3"});startHeartAnimation();},delay+1000);
 }
 
-// -------------------- THREE.JS ANIMATION --------------------
-let scene = new THREE.Scene();
-let camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
-let renderer = new THREE.WebGLRenderer({canvas:document.getElementById("three-canvas"), alpha:true});
-renderer.setSize(window.innerWidth, window.innerHeight);
-camera.position.z = 10;
+// -------------------- THREE.JS --------------------
+let scene=new THREE.Scene();
+let camera=new THREE.PerspectiveCamera(75,window.innerWidth/window.innerHeight,0.1,1000);
+let renderer=new THREE.WebGLRenderer({canvas:document.getElementById("three-canvas"),alpha:true});
+renderer.setSize(window.innerWidth,window.innerHeight);
+camera.position.z=10;
 
 // Stars
-let starGeo = new THREE.BufferGeometry();
-let starVertices = [];
+let starGeo=new THREE.BufferGeometry(), starVertices=[];
 for(let i=0;i<2000;i++) starVertices.push((Math.random()-0.5)*200,(Math.random()-0.5)*200,(Math.random()-0.5)*200);
-starGeo.setAttribute('position', new THREE.Float32BufferAttribute(starVertices,3));
-let starMat = new THREE.PointsMaterial({color:0xffffff,size:0.2});
-let stars = new THREE.Points(starGeo,starMat);
+starGeo.setAttribute('position',new THREE.Float32BufferAttribute(starVertices,3));
+let starMat=new THREE.PointsMaterial({color:0xffffff,size:0.2});
+let stars=new THREE.Points(starGeo,starMat);
 scene.add(stars);
 
-// Shooting star function
-function shootingStar() {
-  let geo = new THREE.BufferGeometry();
-  let pos = new Float32Array(2*3);
-  pos[0] = (Math.random()-0.5)*20; pos[1] = 10; pos[2] = (Math.random()-0.5)*20;
-  pos[3] = pos[0]+Math.random()*4; pos[4] = pos[1]-8; pos[5] = pos[2]+Math.random()*4;
-  geo.setAttribute('position', new THREE.BufferAttribute(pos,3));
-  let mat = new THREE.LineBasicMaterial({color:0xffffff});
-  let star = new THREE.Line(geo, mat);
-  scene.add(star);
-  setTimeout(()=>scene.remove(star), 1500);
-}
+// Shooting stars
+function shootingStar(){let geo=new THREE.BufferGeometry();let pos=new Float32Array(6);pos[0]=(Math.random()-0.5)*20;pos[1]=10;pos[2]=(Math.random()-0.5)*20;pos[3]=pos[0]+Math.random()*4;pos[4]=pos[1]-8;pos[5]=pos[2]+Math.random()*4;geo.setAttribute('position',new THREE.BufferAttribute(pos,3));let mat=new THREE.LineBasicMaterial({color:0xffffff});let star=new THREE.Line(geo,mat);scene.add(star);setTimeout(()=>scene.remove(star),1500);}
 
 // Heart particles
-let count = 1500;
-let geometry = new THREE.BufferGeometry();
-let positions = new Float32Array(count*3);
-for(let i=0;i<count*3;i++) positions[i] = (Math.random()-0.5)*20;
-geometry.setAttribute('position', new THREE.BufferAttribute(positions,3));
-let particleMat = new THREE.PointsMaterial({color:0xff6699, size:0.15});
-let particles = new THREE.Points(geometry,particleMat);
+let count=1500; let geometry=new THREE.BufferGeometry(); let positions=new Float32Array(count*3); for(let i=0;i<count*3;i++) positions[i]=(Math.random()-0.5)*20; geometry.setAttribute('position',new THREE.BufferAttribute(positions,3));
+let particleMat=new THREE.PointsMaterial({color:0xff6699,size:0.15});
+let particles=new THREE.Points(geometry,particleMat);
 scene.add(particles);
 
-function heart(t){ let x=16*Math.pow(Math.sin(t),3); let y=13*Math.cos(t)-5*Math.cos(2*t)-2*Math.cos(3*t)-Math.cos(4*t); return [x/10,y/10]; }
+function heart(t){let x=16*Math.pow(Math.sin(t),3);let y=13*Math.cos(t)-5*Math.cos(2*t)-2*Math.cos(3*t)-Math.cos(4*t);return[x/10,y/10];}
 
-function startHeartAnimation() {
-  let arr = geometry.attributes.position.array;
-  for(let i=0;i<count;i++){
-    let t = Math.random()*Math.PI*2;
-    let p = heart(t);
-    arr[i*3]=p[0]*2; arr[i*3+1]=p[1]*2; arr[i*3+2]=0;
-  }
-  geometry.attributes.position.needsUpdate = true;
-  pulseHeart();
-  fireflies();
-  emojiRainHeart();
+function startHeartAnimation(){
+let arr=geometry.attributes.position.array;
+for(let i=0;i<count;i++){let t=Math.random()*Math.PI*2;let p=heart(t);arr[i*3]=p[0]*2;arr[i*3+1]=p[1]*2;arr[i*3+2]=0;}
+geometry.attributes.position.needsUpdate=true;
+pulseHeart(); fireflies(); emojiRainHeart();
 }
 
 // Heart pulse
-function pulseHeart(){
-  setInterval(()=>{let scale=particles.scale.x===1?1.08:1; particles.scale.set(scale,scale,scale);},500);
-}
+function pulseHeart(){setInterval(()=>{let scale=particles.scale.x===1?1.08:1;particles.scale.set(scale,scale,scale);},500);}
 
 // Fireflies
-function fireflies(){
-  for(let i=0;i<25;i++){
-    let f = document.createElement("div"); f.className="firefly"; document.body.appendChild(f);
-    setInterval(()=>{ f.style.left = Math.random()*100+"vw"; f.style.top = Math.random()*100+"vh"; }, 2000);
-  }
-}
+function fireflies(){for(let i=0;i<25;i++){let f=document.createElement("div");f.className="firefly";document.body.appendChild(f);setInterval(()=>{f.style.left=Math.random()*100+"vw";f.style.top=Math.random()*100+"vh";},2000);}}
 
-// Emoji rain around heart forming giant heart shape
-function emojiRainHeart(){
-  let emojis=["❤️","💖","😘","💘","✨"];
-  for(let i=0;i<50;i++){
-    setTimeout(()=>{
-      let e = document.createElement("div");
-      e.className="emoji";
-      e.innerHTML = emojis[Math.floor(Math.random()*emojis.length)];
-      document.body.appendChild(e);
-      let angle = Math.random()*Math.PI*2;
-      let radius = 50 + Math.random()*50;
-      e.style.left = (window.innerWidth/2 + Math.cos(angle)*radius)+"px";
-      e.style.top = (window.innerHeight/2 + Math.sin(angle)*radius)+"px";
-      let fall = setInterval(()=>{ e.style.top = (e.offsetTop + 2) + "px"; }, 20);
-      setTimeout(()=>{clearInterval(fall); e.remove();}, 5000);
-    }, i*100);
-  }
-}
+// Emoji heart explosion
+function emojiRainHeart(){let emojis=["❤️","💖","😘","💘","✨"];for(let i=0;i<50;i++){setTimeout(()=>{let e=document.createElement("div");e.className="emoji";e.innerHTML=emojis[Math.floor(Math.random()*emojis.length)];document.body.appendChild(e);let angle=Math.random()*Math.PI*2;let radius=50+Math.random()*50;e.style.left=(window.innerWidth/2+Math.cos(angle)*radius)+"px";e.style.top=(window.innerHeight/2+Math.sin(angle)*radius)+"px";let fall=setInterval(()=>{e.style.top=(e.offsetTop+2)+"px";},20);setTimeout(()=>{clearInterval(fall);e.remove();},5000);},i*100);}}
 
-// Render loop
-function animate(){
-  requestAnimationFrame(animate);
-  stars.rotation.y += 0.0003;
-  particles.rotation.y += 0.002;
-  renderer.render(scene,camera);
-}
+function spawnParticlesAroundDiv(div){let rect=div.getBoundingClientRect();for(let i=0;i<5;i++){let p=document.createElement("div");p.className="emoji";p.innerHTML=["💖","✨","❤️","😘","💘"][Math.floor(Math.random()*5)];p.style.left=(rect.left+Math.random()*rect.width)+"px";p.style.top=(rect.top+Math.random()*rect.height)+"px";document.body.appendChild(p);setTimeout(()=>p.remove(),2000);}}
+
+function animate(){requestAnimationFrame(animate);stars.rotation.y+=0.0003;particles.rotation.y+=0.002;renderer.render(scene,camera);}
 animate();
 
-window.addEventListener("resize", ()=>{
-  camera.aspect = window.innerWidth/window.innerHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth, window.innerHeight);
-});
+window.addEventListener("resize",()=>{camera.aspect=window.innerWidth/window.innerHeight;camera.updateProjectionMatrix();renderer.setSize(window.innerWidth,window.innerHeight);});
 </script>
 </body>
 </html>
